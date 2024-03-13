@@ -24,9 +24,9 @@ class AuthController extends Controller
         if($validation->fails()){
             $response =[
                 'success'=>false,
-                'message'=>$validation->errors(),
+                'message'=>implode(",", $validation->errors()->all()),
             ];
-            return response()->json($response,400);
+            return response()->json($response,200);
         }
 
         $user = new User;
@@ -53,12 +53,12 @@ class AuthController extends Controller
             'password' => 'required|min:6|max:32'
         ]);
 
-        if ($validation->failed()) {
+        if ($validation->fails()) {
             $response = [
                 'success' => false,
-                'message' => $validation->errors(),
+                'message' => implode(" ", $validation->errors()->all()),
             ];
-            return response()->json($response, 400);
+            return response()->json($response, 200);
         }
         $cred = ['email'=>$request->email,'password'=>$request->password];
         if(Auth::attempt($cred)){
@@ -76,7 +76,7 @@ class AuthController extends Controller
                 'success' => false,
                 'message' => 'Email and Password invalid!',
             ];
-            return response()->json($response, 400);
+            return response()->json($response, 200);
         }
     }
 }

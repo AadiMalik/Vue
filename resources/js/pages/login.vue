@@ -5,6 +5,8 @@
                         <div class="card">
                               <div class="card-header">
                                     <h3>Login</h3>
+
+                                    <div v-if="error" class="alert alert-danger">{{ error }}</div>
                               </div>
                               <div class="card-body">
                                     <form @submit.prevent="login">
@@ -18,7 +20,7 @@
                                                 <input type="password" class="form-control" id="password"
                                                       placeholder="Password" v-model="form.password">
                                           </div>
-                                          <button type="submit" class="btn btn-primary">Login</button>
+                                          <button type="submit" class="btn btn-primary mt-2">Login</button>
                                     </form>
                               </div>
                         </div>
@@ -28,19 +30,29 @@
 </template>
 
 <script>
-import { reactive } from 'vue'
+import { reactive,ref } from 'vue';
+import router from '../router.js';
+import { useStore } from 'vuex';
 export default {
       setup() {
+            const store = useStore();
             let form = reactive({
                   email:'',
                   password:''
             });
+            let error = ref('');
             const login = async()=>{
                   await axios.post('/api/auth/login',form).then(res=>{
-                        console.log(res);
+                        if (res.data.success){
+                              // localStorage.setItem('token',res.data.data.token);
+                              store.dispatch('setToken', res.data.data.token);
+                              router.push('/dashboard')
+                        }else{
+                              error.value = res.data.message;
+                        }
                   })
             }
-            return{form,login};
+            return{form,login, error};
       },
 }
 </script>

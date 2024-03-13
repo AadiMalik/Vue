@@ -16,10 +16,13 @@
 
                                     </li>
                                     <li class="nav-item">
-                                          <router-link class="nav-link active" to="/login">Login</router-link>
+                                          <router-link class="nav-link" v-if="!$store.getters.getToken" to="/login">Login</router-link>
                                     </li>
                                     <li class="nav-item">
-                                          <router-link class="nav-link active" to="/register">Register</router-link>
+                                          <router-link class="nav-link" v-if="!$store.getters.getToken" to="/register">Register</router-link>
+                                    </li>
+                                    <li class="nav-item">
+                                          <router-link class="nav-link" v-if="$store.getters.getToken" to="/dashboard">Dashbaord</router-link>
                                     </li>
                                     <!-- <li class="nav-item dropdown">
                                           <a class="nav-link dropdown-toggle" href="#" role="button"
